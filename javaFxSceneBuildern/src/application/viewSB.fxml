@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="279.0" prefWidth="313.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MyController">
+   <children>
+      <VBox layoutX="10.0" layoutY="14.0" prefHeight="274.0" prefWidth="296.0">
+         <children>
+            <HBox prefHeight="36.0" prefWidth="296.0">
+               <children>
+                  <Label text="Email-Adresse">
+                     <HBox.margin>
+                        <Insets left="25.0" />
+                     </HBox.margin>
+                  </Label>
+                  <TextField fx:id="tfEmail" prefHeight="25.0" prefWidth="178.0">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </TextField>
+               </children>
+            </HBox>
+            <HBox prefHeight="88.0" prefWidth="296.0">
+               <children>
+                  <Label text="Anliegen/Stichwort" />
+                  <ComboBox fx:id="cbAnliegen" prefWidth="150.0" promptText="Bitte auswählen" />
+               </children>
+            </HBox>
+            <VBox prefHeight="138.0" prefWidth="296.0">
+               <children>
+                  <Label text="Ihre Nachricht" />
+                  <TextArea fx:id="taNachricht" prefHeight="95.0" prefWidth="296.0" />
+               </children>
+               <VBox.margin>
+                  <Insets top="-30.0" />
+               </VBox.margin>
+            </VBox>
+            <HBox prefHeight="36.0" prefWidth="296.0">
+               <children>
+                  <Button fx:id="fxNachricht" mnemonicParsing="false" onAction="#butNachrichtAbschicken" text="Nachricht abschicken" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
