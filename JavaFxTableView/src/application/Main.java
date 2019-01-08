@@ -31,9 +31,11 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) {
+		PersonRepository.conn=erstelleVerbindung();
+		PersonRepository.holeAllePersonenAusDbOL();
 		PersonRepository pr = new PersonRepository();
 		pr.start();
-		PersonRepository.conn=erstelleVerbindung();
+
 //		Thread th1 = new Thread (new Runnable () {
 //			List <Person> dbListe;
 //			@Override

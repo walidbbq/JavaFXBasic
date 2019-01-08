@@ -24,7 +24,7 @@ public class PersonRepository extends Thread {
 //	public static ObservableList <Person> getPersonen () {
 //		return personen;
 //	}
-	
+
 //	public static void addToPersonen (Person p) {
 //		personen.add(p);
 //	}
@@ -33,7 +33,7 @@ public class PersonRepository extends Thread {
 //		personen.remove(p);
 //	}
 
-	public static List <Person> LeseDb() {
+	public static List<Person> LeseDb() {
 		List<Person> listePersonen = new ArrayList<>();
 		String sql = "SELECT * FROM person";
 		try {
@@ -53,6 +53,7 @@ public class PersonRepository extends Thread {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		return listePersonen;
 
 	}
@@ -69,9 +70,9 @@ public class PersonRepository extends Thread {
 				String nachname = result.getString("nachname");
 
 				Person p = new Person(bid, vorname, nachname);
-				if (!personen.contains(p)) {
-					synchronized (p) {
-					personen.add(p);
+				synchronized (personen) {
+					if (!personen.contains(p)) {
+						personen.add(p);
 					}
 				}
 
@@ -93,20 +94,23 @@ public class PersonRepository extends Thread {
 		p.setNachname(nachname);
 
 		String insertSql = "INSERT INTO person (vorname,nachname) VALUES (?,?)";
-		if (!personen.contains(p)) {
-			try (PreparedStatement prep = conn.prepareStatement(insertSql)) {
-				prep.setString(1, vorname);
-				prep.setString(2, nachname);
-				synchronized (p) {
-					
+		synchronized (personen) {
+
+			if (!personen.contains(p)) {
+				try (PreparedStatement prep = conn.prepareStatement(insertSql)) {
+					prep.setString(1, vorname);
+					prep.setString(2, nachname);
+					synchronized (p) {
+
+					}
+					prep.executeUpdate();
+					personen.add(p);
+					return true;
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return false;
 				}
-				prep.executeUpdate();
-				personen.add(p);
-				return true;
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return false;
 			}
 		}
 		return true;
@@ -119,26 +123,29 @@ public class PersonRepository extends Thread {
 		p.setNachname(nachname);
 
 		String deleteSql = "DELETE FROM person WHERE vorname=? AND nachname=? ";
-		if (personen.contains(p)) {
-			try (PreparedStatement prep = conn.prepareStatement(deleteSql)) {
-				prep.setString(1, vorname);
-				prep.setString(2, nachname);
-				synchronized (p) {
-				prep.executeUpdate();
-				personen.remove(p);
+		synchronized (personen) {
+			if (personen.contains(p)) {
+				try (PreparedStatement prep = conn.prepareStatement(deleteSql)) {
+					prep.setString(1, vorname);
+					prep.setString(2, nachname);
+					synchronized (p) {
+						prep.executeUpdate();
+						personen.remove(p);
+					}
+					return true;
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return false;
 				}
-				return true;
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return false;
 			}
 		}
 		return false;
+
 	}
-	
+
 	@Override
-	public void run () {
+	public void run() {
 		while (true) {
 			try {
 				Thread.sleep(5000);
@@ -146,26 +153,25 @@ public class PersonRepository extends Thread {
 				e.printStackTrace();
 			}
 			System.out.println("aus Run Method");
-			for (Person p : LeseDb()) {
-				if (!personen.contains(p)) {
-					synchronized (p) {
-					personen.add(p);
-					System.out.println("aus add liste");
-					}
-				}
-			}
-			
-			for (Person p :personen) {
-				if (!LeseDb().contains(p)) {
-					synchronized (p) {
-					personen.remove(p);		
-				System.out.println("aus remove liste");
+//			for (Person p : LeseDb()) {
+//				synchronized (personen) {
+//					if (!personen.contains(p)) {
+//						personen.add(p);
+//						System.out.println("aus add liste");
+//					}
+//				}
+//			}
+			holeAllePersonenAusDbOL();
+			synchronized (personen) {
+				for (int i = 0; i < personen.size(); i++) {
+					if (!LeseDb().contains(personen.get(i))) {
+						Person pRaus = personen.get(i);
+						personen.remove(pRaus);
+						System.out.println("aus remove liste");
+						i--;
 					}
 				}
 			}
 		}
 	}
-	
-
-
 }
