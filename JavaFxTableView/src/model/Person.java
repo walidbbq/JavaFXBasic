@@ -1,14 +1,14 @@
 package model;
 
 public class Person {
-	private long bid; 
+	private long pid; 
 	private String vorname;
 	private String nachname;
 	
 	public Person() {}
 
-	public Person(long bid ,String vorname, String nachname) {
-		this.bid=bid;
+	public Person(long pid, String vorname, String nachname) {
+		this.pid=pid;
 		this.vorname = vorname;
 		this.nachname = nachname;
 	}
@@ -16,11 +16,11 @@ public class Person {
 
 
 	public long getBid() {
-		return bid;
+		return pid;
 	}
 
 	public void setBid(long bid) {
-		this.bid = bid;
+		this.pid = bid;
 	}
 
 	public String getVorname() {
@@ -41,14 +41,14 @@ public class Person {
 
 	@Override
 	public String toString() {
-		return bid + " " + vorname + " " + nachname;
+		return pid + " " + vorname + " " + nachname;
 	} 
 	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Person) {
 			Person that = (Person) obj;
-			if (that.bid==this.bid &&
+			if (
 				that.vorname.equalsIgnoreCase(this.vorname) &&
 				that.nachname.equalsIgnoreCase(this.nachname)) {
 				return true;
